@@ -4,25 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Code Bundler — Empaquetador para IA</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            950: '#030712',
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            700: '#334155',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- JSZip para descompresión de archivos .zip -->
@@ -33,25 +14,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Estilos personalizados -->
+    <!-- Estilos CSS Locales -->
     <link rel="stylesheet" href="estilo/estilo.css">
 </head>
-<body class="bg-dark-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white" x-data="empaquetadorApp()" x-init="inicializar()">
+<body x-data="empaquetadorApp()" x-init="inicializar()">
 
     <!-- Barra de Navegación -->
-    <header class="border-b border-slate-800 bg-dark-900/90 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                    <i class="fa-solid fa-file-code text-white text-lg"></i>
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-file-code text-white"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">AI Code Bundler</h1>
-                    <p class="text-xs text-slate-400">Unifica tu repositorio en un único Markdown optimizado para IA</p>
+                    <h1>AI Code Bundler</h1>
+                    <p>Unifica tu repositorio en un único Markdown optimizado para IA</p>
                 </div>
             </div>
-            <div class="flex items-center space-x-3">
-                <button @click="cargarProyectoDemo()" class="text-xs px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center space-x-2 shadow-sm cursor-pointer">
+            <div class="nav-actions">
+                <button @click="cargarProyectoDemo()" class="btn-secondary">
                     <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i>
                     <span>Cargar Demo</span>
                 </button>
@@ -60,30 +41,28 @@
     </header>
 
     <!-- Zona Principal -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+    <main class="main-content">
 
         <!-- Barra de Importación -->
-        <section class="bg-dark-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden group">
-            <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-indigo-500/20 transition-all duration-700"></div>
+        <section class="card-import">
+            <div class="import-glow"></div>
             
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div class="import-header">
                 <div class="space-y-1 text-center md:text-left">
-                    <h2 class="text-xl font-bold text-white flex items-center justify-center md:justify-start gap-2">
+                    <h2>
                         <i class="fa-solid fa-cloud-arrow-up text-indigo-400"></i>
                         <span>Importar Proyecto (Carpeta, ZIP o Archivos)</span>
                     </h2>
-                    <p class="text-sm text-slate-400 max-w-xl">
-                        Sube la carpeta de tu código fuente o un .zip para unificarlo ordenadamente.
-                    </p>
+                    <p>Sube la carpeta de tu código fuente o un .zip para unificarlo ordenadamente.</p>
                 </div>
 
-                <div class="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
-                    <label class="cursor-pointer bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-3 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center space-x-2 text-sm">
+                <div class="import-buttons">
+                    <label class="btn-primary cursor-pointer">
                         <i class="fa-solid fa-folder-tree"></i>
                         <span>Subir Carpeta</span>
                         <input type="file" webkitdirectory directory multiple class="hidden" @change="manejarSeleccionCarpeta($event)">
                     </label>
-                    <label class="cursor-pointer bg-violet-600 hover:bg-violet-500 text-white font-medium px-5 py-3 rounded-xl shadow-lg shadow-violet-600/30 transition flex items-center space-x-2 text-sm">
+                    <label class="btn-violet cursor-pointer">
                         <i class="fa-solid fa-file-zipper"></i>
                         <span>Subir .ZIP</span>
                         <input type="file" accept=".zip" class="hidden" @change="manejarSeleccionZip($event)">
@@ -96,70 +75,66 @@
                 @dragover.prevent="estaArrastrando = true" 
                 @dragleave.prevent="estaArrastrando = false" 
                 @drop.prevent="manejarSoltado($event)"
-                :class="estaArrastrando ? 'border-indigo-500 bg-indigo-500/10' : 'border-slate-800 hover:border-slate-700'"
-                class="mt-6 border-2 border-dashed rounded-xl p-6 text-center transition flex flex-col items-center justify-center cursor-pointer">
-                <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 mb-2">
-                    <i class="fa-solid fa-arrow-up-from-bracket text-lg text-indigo-400"></i>
+                :class="estaArrastrando ? 'dropzone active' : 'dropzone'">
+                <div class="dropzone-icon">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
                 </div>
-                <p class="text-sm font-medium text-slate-300">Arrastra tu carpeta o archivo .zip aquí</p>
+                <p class="dropzone-text">Arrastra tu carpeta o archivo .zip aquí</p>
             </div>
         </section>
 
         <!-- Panel de Control y Vista de Archivos -->
         <template x-if="obtenerCantidadArchivos() > 0">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="app-grid">
                 
-                <!-- Columna Izquierda: Controles y Árbol (4 cols) -->
-                <div class="bg-dark-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col gap-4 lg:col-span-4">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <!-- Columna Izquierda: Controles y Árbol -->
+                <div class="panel-left">
+                    <div class="panel-header">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-folder-open text-indigo-400"></i>
-                            <h3 class="font-semibold text-white text-sm">Archivos Detectados (<span x-text="obtenerCantidadArchivos()"></span>)</h3>
+                            <h3>Archivos Detectados (<span x-text="obtenerCantidadArchivos()"></span>)</h3>
                         </div>
-                        <button @click="limpiarTodo()" class="text-xs text-rose-400 hover:text-rose-300 transition flex items-center space-x-1 cursor-pointer">
+                        <button @click="limpiarTodo()" class="btn-text-rose">
                             <i class="fa-solid fa-trash-can"></i>
                             <span>Limpiar</span>
                         </button>
                     </div>
 
                     <!-- Opciones de Generación para IA -->
-                    <div class="space-y-2 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
-                        <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Opciones del Bundle</h4>
-                        <label class="flex items-center space-x-2.5 text-xs text-slate-300 cursor-pointer">
-                            <input type="checkbox" x-model="opciones.excluirBinarios" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+                    <div class="options-box">
+                        <h4>Opciones del Bundle</h4>
+                        <label class="checkbox-label">
+                            <input type="checkbox" x-model="opciones.excluirBinarios" class="checkbox-input">
                             <span>Excluir imágenes/binarios (Ahorra tokens)</span>
                         </label>
                     </div>
 
                     <!-- Botón Generar Bundle -->
-                    <button @click="generarBundleParaIa()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium py-3 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2 text-sm cursor-pointer">
+                    <button @click="generarBundleParaIa()" class="btn-gradient">
                         <i class="fa-solid fa-file-lines"></i>
                         <span>Generar Bundle Markdown para IA</span>
                     </button>
 
                     <!-- Árbol Interactivo con Buscador -->
-                    <div class="flex-1 flex flex-col gap-2 min-h-[220px]">
-                        <div class="flex items-center justify-between text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                    <div class="tree-container">
+                        <div class="tree-header">
                             <span>Estructura</span>
                         </div>
-                        <!-- Buscador de archivos en el árbol -->
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 text-xs">
-                                <i class="fa-solid fa-search"></i>
-                            </span>
-                            <input type="text" x-model="filtroArbol" placeholder="Buscar archivo..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 font-mono">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search search-icon"></i>
+                            <input type="text" x-model="filtroArbol" placeholder="Buscar archivo..." class="search-input">
                         </div>
 
-                        <div class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 overflow-y-auto max-h-[240px] space-y-1 font-mono text-xs">
+                        <div class="tree-list">
                             <template x-for="(nodo, ruta) in filtrarArbol()" :key="ruta">
-                                <div class="flex items-center justify-between py-1 px-2 rounded hover:bg-slate-900 group transition">
-                                    <div class="flex items-center space-x-2 overflow-hidden cursor-pointer" @click="seleccionarArchivo(ruta)">
+                                <div class="tree-item group">
+                                    <div class="tree-item-info" @click="seleccionarArchivo(ruta)">
                                         <i :class="obtenerIconoNodo(nodo)" class="shrink-0"></i>
-                                        <span class="truncate text-slate-300" :class="archivoSeleccionado === ruta ? 'text-indigo-400 font-bold' : ''" x-text="ruta"></span>
+                                        <span class="truncate" :class="archivoSeleccionado === ruta ? 'text-indigo-400 font-bold' : ''" x-text="ruta"></span>
                                     </div>
-                                    <div class="flex items-center space-x-2 opacity-80 group-hover:opacity-100">
-                                        <span class="text-slate-500 text-[10px]" x-text="formatearBytes(nodo.tamano)"></span>
-                                        <button @click="eliminarArchivo(ruta)" class="text-slate-500 hover:text-rose-400 p-1 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                                    <div class="tree-item-actions">
+                                        <span class="text-xs text-slate-500" x-text="formatearBytes(nodo.tamano)"></span>
+                                        <button @click="eliminarArchivo(ruta)" class="btn-delete"><i class="fa-solid fa-xmark"></i></button>
                                     </div>
                                 </div>
                             </template>
@@ -167,21 +142,21 @@
                     </div>
                 </div>
 
-                <!-- Columna Derecha: Editor / Resultado Markdown / Logs (8 cols) -->
-                <div class="bg-dark-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col lg:col-span-8">
+                <!-- Columna Derecha: Editor / Resultado Markdown / Logs -->
+                <div class="panel-right">
                     
                     <!-- Pestañas de Navegación -->
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-800 pb-4 gap-4">
-                        <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-                            <button @click="pestanaActiva = 'bundle'" :class="pestanaActiva === 'bundle' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
+                    <div class="tabs-bar">
+                        <div class="tabs-group">
+                            <button @click="pestanaActiva = 'bundle'" :class="pestanaActiva === 'bundle' ? 'tab-btn active' : 'tab-btn'">
                                 <i class="fa-solid fa-file-arrow-down"></i>
                                 <span>Bundle para IA (.md)</span>
                             </button>
-                            <button @click="pestanaActiva = 'editor'" :class="pestanaActiva === 'editor' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
+                            <button @click="pestanaActiva = 'editor'" :class="pestanaActiva === 'editor' ? 'tab-btn active' : 'tab-btn'">
                                 <i class="fa-solid fa-code"></i>
                                 <span>Editor (<span x-text="archivoSeleccionado || 'Ninguno'"></span>)</span>
                             </button>
-                            <button @click="pestanaActiva = 'registros'" :class="pestanaActiva === 'registros' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
+                            <button @click="pestanaActiva = 'registros'" :class="pestanaActiva === 'registros' ? 'tab-btn active' : 'tab-btn'">
                                 <i class="fa-solid fa-terminal"></i>
                                 <span>Registros</span>
                             </button>
@@ -190,11 +165,11 @@
                         <!-- Botones de Exportación -->
                         <template x-if="bundleAi">
                             <div class="flex items-center space-x-2">
-                                <button @click="copiarCodigo()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-xl text-xs font-medium transition flex items-center space-x-1.5 cursor-pointer">
+                                <button @click="copiarCodigo()" class="btn-secondary">
                                     <i class="fa-solid fa-copy text-indigo-400"></i>
                                     <span x-text="copiado ? '¡Copiado!' : 'Copiar Markdown'"></span>
                                 </button>
-                                <button @click="descargarBundle()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-medium shadow-lg shadow-emerald-600/20 transition flex items-center space-x-1.5 cursor-pointer">
+                                <button @click="descargarBundle()" class="btn-emerald">
                                     <i class="fa-solid fa-download"></i>
                                     <span>Descargar .md</span>
                                 </button>
@@ -203,55 +178,55 @@
                     </div>
 
                     <!-- Contenido de las Pestañas -->
-                    <div class="flex-1 mt-4 flex flex-col min-h-[520px]">
+                    <div class="tab-content-container">
                         
                         <!-- Pestaña 1: Bundle Markdown para IA -->
-                        <div x-show="pestanaActiva === 'bundle'" class="flex-1 flex flex-col gap-3">
+                        <div x-show="pestanaActiva === 'bundle'" class="flex-1 flex flex-col gap-3 h-full">
                             <div class="flex items-center justify-between text-xs text-slate-400 px-1">
                                 <span x-text="bundleAi ? 'Tamaño del bundle: ' + formatearBytes(bundleAi.length) : 'Sin bundle generado'"></span>
                                 <span class="text-slate-500">Formato listo para arrastrar y soltar en tu IA</span>
                             </div>
-                            <div class="flex-1 bg-slate-950 rounded-xl border border-slate-800 overflow-hidden relative">
+                            <div class="code-viewer">
                                 <template x-if="!bundleAi">
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-2">
+                                    <div class="empty-state-inner">
                                         <i class="fa-solid fa-file-lines text-4xl text-slate-700"></i>
                                         <p class="text-sm text-slate-400">Haz clic en <strong class="text-indigo-400">"Generar Bundle Markdown para IA"</strong> para unificar tu código.</p>
                                     </div>
                                 </template>
-                                <textarea readonly x-model="bundleAi" class="w-full h-full bg-slate-950 text-slate-300 p-4 text-xs resize-none focus:outline-none font-mono" placeholder="El código unificado aparecerá aquí..."></textarea>
+                                <textarea readonly x-model="bundleAi" class="code-textarea" placeholder="El código unificado aparecerá aquí..."></textarea>
                             </div>
                         </div>
 
                         <!-- Pestaña 2: Editor de Código -->
-                        <div x-show="pestanaActiva === 'editor'" class="flex-1 flex flex-col gap-3">
+                        <div x-show="pestanaActiva === 'editor'" class="flex-1 flex flex-col gap-3 h-full">
                             <template x-if="!archivoSeleccionado">
-                                <div class="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-2">
+                                <div class="empty-state-inner">
                                     <i class="fa-solid fa-file-code text-4xl text-slate-700"></i>
                                     <p class="text-sm text-slate-400">Selecciona un archivo del árbol de la izquierda para editarlo.</p>
                                 </div>
                             </template>
                             <template x-if="archivoSeleccionado">
-                                <div class="flex-1 flex flex-col gap-2">
+                                <div class="flex-1 flex flex-col gap-2 h-full">
                                     <div class="flex items-center justify-between text-xs text-slate-400 px-1">
                                         <span class="font-mono text-indigo-400" x-text="archivoSeleccionado"></span>
-                                        <button @click="guardarArchivoActual()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-lg text-xs transition cursor-pointer">Guardar Cambios</button>
+                                        <button @click="guardarArchivoActual()" class="btn-primary text-xs py-1 px-3">Guardar Cambios</button>
                                     </div>
-                                    <textarea x-model="contenidoEditor" class="flex-1 w-full bg-slate-950 text-slate-200 p-4 text-xs rounded-xl border border-slate-800 focus:outline-none focus:border-indigo-500 resize-none font-mono"></textarea>
+                                    <textarea x-model="contenidoEditor" class="code-textarea flex-1"></textarea>
                                 </div>
                             </template>
                         </div>
 
                         <!-- Pestaña 3: Registros -->
-                        <div x-show="pestanaActiva === 'registros'" class="flex-1 flex flex-col gap-3">
+                        <div x-show="pestanaActiva === 'registros'" class="flex-1 flex flex-col gap-3 h-full">
                             <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-                                    <span>Historial de Procesamiento</span>
+                                <span>Historial de Procesamiento</span>
                                 <button @click="registros = []" class="text-slate-500 hover:text-slate-300 cursor-pointer">Limpiar</button>
                             </div>
-                            <div class="flex-1 bg-slate-950 rounded-xl border border-slate-800 p-4 overflow-y-auto space-y-2 font-mono text-xs">
+                            <div class="logs-container">
                                 <template x-for="reg in registros" :key="reg.id">
-                                    <div class="flex items-start space-x-2 border-b border-slate-900 pb-1.5">
+                                    <div class="log-item">
                                         <span class="text-slate-500 text-[10px]" x-text="reg.tiempo"></span>
-                                        <span class="font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-slate-900 text-indigo-400" x-text="reg.tipo"></span>
+                                        <span class="log-badge" x-text="reg.tipo"></span>
                                         <span class="text-slate-300 flex-1" x-text="reg.mensaje"></span>
                                     </div>
                                 </template>
@@ -266,8 +241,8 @@
 
         <!-- Estado Vacío Inicial -->
         <template x-if="obtenerCantidadArchivos() === 0">
-            <div class="bg-dark-900/50 border border-slate-800/80 rounded-2xl p-12 text-center flex flex-col items-center justify-center space-y-4">
-                <div class="w-16 h-16 rounded-2xl bg-slate-800/80 flex items-center justify-center text-indigo-400 shadow-inner">
+            <div class="empty-state-card">
+                <div class="empty-icon-box">
                     <i class="fa-solid fa-laptop-code text-2xl"></i>
                 </div>
                 <div class="max-w-md space-y-1">
