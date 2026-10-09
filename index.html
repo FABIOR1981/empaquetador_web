@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
-    <!-- STREAMING_CHUNK:Configurando metadatos y fuentes tipográficas... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Empaquetador de Proyectos Web — Carpetas, ZIP y Activos</title>
+    <title>Empaquetador de Proyectos para IA — Markdown Bundler</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -39,33 +38,28 @@
 </head>
 <body class="bg-dark-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white" x-data="empaquetadorApp()" x-init="inicializar()">
 
-    <!-- STREAMING_CHUNK:Diseñando la barra de navegación superior... -->
+    <!-- Barra de Navegación -->
     <header class="border-b border-slate-800 bg-dark-900/90 backdrop-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-pink-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                    <i class="fa-solid fa-boxes-stacked text-white text-lg"></i>
+                    <i class="fa-solid fa-file-code text-white text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">Empaquetador Web Pro</h1>
-                    <p class="text-xs text-slate-400">Unificador de Carpetas, Subdirectorios y Archivos ZIP en 1 solo HTML</p>
+                    <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent">AI Code Bundler</h1>
+                    <p class="text-xs text-slate-400">Unifica tu repositorio en un único Markdown optimizado para IA</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3">
                 <button @click="cargarProyectoDemo()" class="text-xs px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center space-x-2 shadow-sm cursor-pointer">
                     <i class="fa-solid fa-wand-magic-sparkles text-indigo-400"></i>
-                    <span>Cargar Proyecto Demo</span>
+                    <span>Cargar Demo</span>
                 </button>
-                <div class="h-4 w-px bg-slate-800"></div>
-                <div class="flex items-center space-x-1.5 text-xs text-slate-400 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
-                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-                    <span>100% Local y Seguro</span>
-                </div>
             </div>
         </div>
     </header>
 
-    <!-- STREAMING_CHUNK:Construyendo la zona principal de trabajo y arrastre... -->
+    <!-- Zona Principal -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
 
         <!-- Barra de Importación -->
@@ -76,31 +70,23 @@
                 <div class="space-y-1 text-center md:text-left">
                     <h2 class="text-xl font-bold text-white flex items-center justify-center md:justify-start gap-2">
                         <i class="fa-solid fa-cloud-arrow-up text-indigo-400"></i>
-                        <span>Importar Proyecto (Carpetas, ZIP o Archivos)</span>
+                        <span>Importar Proyecto (Carpeta, ZIP o Archivos)</span>
                     </h2>
                     <p class="text-sm text-slate-400 max-w-xl">
-                        Sube una carpeta completa con subcarpetas, un archivo .zip o múltiples archivos manteniendo toda su estructura de rutas.
+                        Sube la carpeta de tu código fuente o un .zip para unificarlo ordenadamente.
                     </p>
                 </div>
 
                 <div class="flex flex-wrap items-center justify-center gap-3 w-full md:w-auto">
-                    <!-- Botón Carpeta -->
                     <label class="cursor-pointer bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-3 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center space-x-2 text-sm">
                         <i class="fa-solid fa-folder-tree"></i>
                         <span>Subir Carpeta</span>
                         <input type="file" webkitdirectory directory multiple class="hidden" @change="manejarSeleccionCarpeta($event)">
                     </label>
-                    <!-- Botón ZIP -->
                     <label class="cursor-pointer bg-violet-600 hover:bg-violet-500 text-white font-medium px-5 py-3 rounded-xl shadow-lg shadow-violet-600/30 transition flex items-center space-x-2 text-sm">
                         <i class="fa-solid fa-file-zipper"></i>
                         <span>Subir .ZIP</span>
                         <input type="file" accept=".zip" class="hidden" @change="manejarSeleccionZip($event)">
-                    </label>
-                    <!-- Botón Archivos Sueltos -->
-                    <label class="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-5 py-3 rounded-xl border border-slate-700 transition flex items-center space-x-2 text-sm">
-                        <i class="fa-solid fa-file-circle-plus"></i>
-                        <span>Archivos Sueltos</span>
-                        <input type="file" multiple class="hidden" @change="manejarSeleccionArchivos($event)">
                     </label>
                 </div>
             </div>
@@ -115,21 +101,20 @@
                 <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 mb-2">
                     <i class="fa-solid fa-arrow-up-from-bracket text-lg text-indigo-400"></i>
                 </div>
-                <p class="text-sm font-medium text-slate-300">Arrastra tu carpeta, archivo .zip o archivos aquí</p>
-                <p class="text-xs text-slate-500 mt-1">Soporta HTML, CSS, JS, imágenes (PNG, JPG, SVG, WebP, GIF), fuentes y subniveles infinitos.</p>
+                <p class="text-sm font-medium text-slate-300">Arrastra tu carpeta o archivo .zip aquí</p>
             </div>
         </section>
 
-        <!-- STREAMING_CHUNK:Configurando la vista principal con archivos cargados... -->
+        <!-- Panel de Control y Vista de Archivos -->
         <template x-if="obtenerCantidadArchivos() > 0">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <!-- Columna Izquierda: Árbol de Archivos y Controles (4 cols) -->
+                <!-- Columna Izquierda: Controles y Árbol (4 cols) -->
                 <div class="bg-dark-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col gap-4 lg:col-span-4">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-folder-open text-indigo-400"></i>
-                            <h3 class="font-semibold text-white text-sm">Estructura del Proyecto (<span x-text="obtenerCantidadArchivos()"></span>)</h3>
+                            <h3 class="font-semibold text-white text-sm">Archivos Detectados (<span x-text="obtenerCantidadArchivos()"></span>)</h3>
                         </div>
                         <button @click="limpiarTodo()" class="text-xs text-rose-400 hover:text-rose-300 transition flex items-center space-x-1 cursor-pointer">
                             <i class="fa-solid fa-trash-can"></i>
@@ -137,65 +122,27 @@
                         </button>
                     </div>
 
-                    <!-- Selector de Punto de Entrada (Entry HTML) con Menú Personalizado -->
-                    <div class="space-y-1.5" x-data="{ abiertoDropdown: false }">
-                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Archivo HTML Principal (Entry)</label>
-                        <div class="relative">
-                            <button @click="abiertoDropdown = !abiertoDropdown" type="button" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 flex items-center justify-between focus:outline-none focus:border-indigo-500 transition cursor-pointer">
-                                <span class="font-mono text-indigo-400 truncate" x-text="archivoEntrada || 'Seleccionar archivo principal...'"></span>
-                                <i class="fa-solid fa-chevron-down text-slate-400 text-[10px]"></i>
-                            </button>
-                            <div x-show="abiertoDropdown" @click.away="abiertoDropdown = false" class="absolute z-50 mt-1 w-full bg-slate-950 border border-slate-800 rounded-xl shadow-2xl overflow-hidden max-h-48 overflow-y-auto">
-                                <template x-for="ruta in archivosHtml" :key="ruta">
-                                    <div @click="archivoEntrada = ruta; abiertoDropdown = false" class="px-3 py-2 text-xs text-slate-300 hover:bg-indigo-600/20 hover:text-indigo-300 cursor-pointer transition flex items-center justify-between font-mono">
-                                        <span x-text="ruta"></span>
-                                        <template x-if="archivoEntrada === ruta">
-                                            <i class="fa-solid fa-check text-indigo-400 text-[10px]"></i>
-                                        </template>
-                                    </div>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Opciones de Empaquetado -->
+                    <!-- Opciones de Generación para IA -->
                     <div class="space-y-2 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800/80">
-                        <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Opciones de Empaquetado</h4>
+                        <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Opciones del Bundle</h4>
                         <label class="flex items-center space-x-2.5 text-xs text-slate-300 cursor-pointer">
-                            <input type="checkbox" x-model="opciones.inlineCss" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-indigo-500">
-                            <span>Incrustar CSS (&lt;link rel="stylesheet"&gt;)</span>
-                        </label>
-                        <label class="flex items-center space-x-2.5 text-xs text-slate-300 cursor-pointer">
-                            <input type="checkbox" x-model="opciones.inlineJs" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-indigo-500">
-                            <span>Incrustar JavaScript (&lt;script src="..."&gt;)</span>
-                        </label>
-                        <label class="flex items-center space-x-2.5 text-xs text-slate-300 cursor-pointer">
-                            <input type="checkbox" x-model="opciones.inlineImages" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-indigo-500">
-                            <span>Convertir Imágenes y Fuentes a Base64</span>
+                            <input type="checkbox" x-model="opciones.excluirBinarios" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+                            <span>Excluir imágenes/binarios (Ahorra tokens)</span>
                         </label>
                     </div>
 
-                    <!-- Indicador de Tamaño Estimado Precalculado -->
-                    <div class="bg-indigo-950/40 border border-indigo-900/50 rounded-xl p-3 flex items-center justify-between text-xs">
-                        <div class="flex items-center space-x-2 text-indigo-300">
-                            <i class="fa-solid fa-calculator"></i>
-                            <span>Tamaño estimado del archivo:</span>
-                        </div>
-                        <span class="font-mono font-bold text-indigo-400" x-text="estimarTamanoFinal()"></span>
-                    </div>
-
-                    <!-- Botón de Empaquetar -->
-                    <button @click="empaquetarProyecto()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium py-3 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2 text-sm cursor-pointer">
-                        <i class="fa-solid fa-bolt"></i>
-                        <span>Empaquetar en 1 Solo Archivo</span>
+                    <!-- Botón Generar Bundle -->
+                    <button @click="generarBundleParaIa()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium py-3 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2 text-sm cursor-pointer">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Generar Bundle Markdown para IA</span>
                     </button>
 
                     <!-- Árbol Interactivo -->
                     <div class="flex-1 flex flex-col gap-2 min-h-[220px]">
                         <div class="flex items-center justify-between text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                            <span>Archivos y Subcarpetas</span>
+                            <span>Estructura</span>
                         </div>
-                        <div class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 overflow-y-auto max-h-[280px] space-y-1 font-mono text-xs">
+                        <div class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 overflow-y-auto max-h-[300px] space-y-1 font-mono text-xs">
                             <template x-for="(nodo, ruta) in arbolArchivos" :key="ruta">
                                 <div class="flex items-center justify-between py-1 px-2 rounded hover:bg-slate-900 group transition">
                                     <div class="flex items-center space-x-2 overflow-hidden cursor-pointer" @click="seleccionarArchivo(ruta)">
@@ -212,40 +159,36 @@
                     </div>
                 </div>
 
-                <!-- STREAMING_CHUNK:Configurando el panel derecho con pestañas de Vista Previa, Editor, HTML y Logs... -->
+                <!-- Columna Derecha: Editor / Resultado Markdown / Logs (8 cols) -->
                 <div class="bg-dark-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col lg:col-span-8">
                     
                     <!-- Pestañas de Navegación -->
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-800 pb-4 gap-4">
                         <div class="flex items-center space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-                            <button @click="pestanaActiva = 'vistaPrevia'" :class="pestanaActiva === 'vistaPrevia' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
-                                <i class="fa-solid fa-eye"></i>
-                                <span>Vista Previa</span>
+                            <button @click="pestanaActiva = 'bundle'" :class="pestanaActiva === 'bundle' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
+                                <i class="fa-solid fa-file-arrow-down"></i>
+                                <span>Bundle para IA (.md)</span>
                             </button>
                             <button @click="pestanaActiva = 'editor'" :class="pestanaActiva === 'editor' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
                                 <i class="fa-solid fa-code"></i>
                                 <span>Editor (<span x-text="archivoSeleccionado || 'Ninguno'"></span>)</span>
                             </button>
-                            <button @click="pestanaActiva = 'codigoFinal'" :class="pestanaActiva === 'codigoFinal' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
-                                <i class="fa-solid fa-file-code"></i>
-                                <span>HTML Final</span>
-                            </button>
                             <button @click="pestanaActiva = 'registros'" :class="pestanaActiva === 'registros' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'" class="px-4 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2 cursor-pointer">
                                 <i class="fa-solid fa-terminal"></i>
-                                <span>Registros (<span x-text="registros.length"></span>)</span>
+                                <span>Registros</span>
                             </button>
                         </div>
 
                         <!-- Botones de Exportación -->
-                        <template x-if="htmlEmpaquetado">
+                        <template x-if="bundleAi">
                             <div class="flex items-center space-x-2">
                                 <button @click="copiarCodigo()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-xl text-xs font-medium transition flex items-center space-x-1.5 cursor-pointer">
                                     <i class="fa-solid fa-copy text-indigo-400"></i>
-                                    <span x-text="copiado ? '¡Copiado!' : 'Copiar Código'"></span>
+                                    <span x-text="copiado ? '¡Copiado!' : 'Copiar Markdown'"></span>
                                 </button>
-                                <button @click="descargarPaquete()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-medium shadow-lg shadow-emerald-600/20 transition flex items-center space-x-1.5 cursor-pointer">
+                                <button @click="descargarBundle()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-medium shadow-lg shadow-emerald-600/20 transition flex items-center space-x-1.5 cursor-pointer">
                                     <i class="fa-solid fa-download"></i>
-                                    <span>Descargar index.html</span>
+                                    <span>Descargar .md</span>
                                 </button>
                             </div>
                         </template>
@@ -254,37 +197,20 @@
                     <!-- Contenido de las Pestañas -->
                     <div class="flex-1 mt-4 flex flex-col min-h-[520px]">
                         
-                        <!-- Pestaña 1: Vista Previa -->
-                        <div x-show="pestanaActiva === 'vistaPrevia'" class="flex-1 flex flex-col gap-3">
+                        <!-- Pestaña 1: Bundle Markdown para IA -->
+                        <div x-show="pestanaActiva === 'bundle'" class="flex-1 flex flex-col gap-3">
                             <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-                                <div class="flex items-center space-x-2">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    <span>Sandbox Autónomo en Tiempo Real</span>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <button @click="dispositivoVista = 'escritorio'" :class="dispositivoVista === 'escritorio' ? 'text-indigo-400 font-semibold' : 'text-slate-500'" class="hover:text-slate-300 cursor-pointer">Escritorio</button>
-                                    <span>•</span>
-                                    <button @click="dispositivoVista = 'tablet'" :class="dispositivoVista === 'tablet' ? 'text-indigo-400 font-semibold' : 'text-slate-500'" class="hover:text-slate-300 cursor-pointer">Tablet</button>
-                                    <span>•</span>
-                                    <button @click="dispositivoVista = 'movil'" :class="dispositivoVista === 'movil' ? 'text-indigo-400 font-semibold' : 'text-slate-500'" class="hover:text-slate-300 cursor-pointer">Móvil</button>
-                                </div>
+                                <span x-text="bundleAi ? 'Tamaño del bundle: ' + formatearBytes(bundleAi.length) : 'Sin bundle generado'"></span>
+                                <span class="text-slate-500">Formato listo para arrastrar y soltar en tu IA</span>
                             </div>
-                            <div class="flex-1 flex items-center justify-center bg-slate-950 rounded-xl border border-slate-800 overflow-hidden p-4">
-                                <template x-if="!htmlEmpaquetado">
-                                    <div class="text-center p-8 space-y-3">
-                                        <i class="fa-solid fa-play text-4xl text-slate-700"></i>
-                                        <p class="text-sm text-slate-400">Haz clic en <strong class="text-indigo-400">"Empaquetar en 1 Solo Archivo"</strong> para generar la vista previa.</p>
+                            <div class="flex-1 bg-slate-950 rounded-xl border border-slate-800 overflow-hidden relative">
+                                <template x-if="!bundleAi">
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-2">
+                                        <i class="fa-solid fa-file-lines text-4xl text-slate-700"></i>
+                                        <p class="text-sm text-slate-400">Haz clic en <strong class="text-indigo-400">"Generar Bundle Markdown para IA"</strong> para unificar tu código.</p>
                                     </div>
                                 </template>
-                                <template x-if="htmlEmpaquetado">
-                                    <div :class="{
-                                        'w-full h-full': dispositivoVista === 'escritorio',
-                                        'w-[768px] h-full rounded-xl border-8 border-slate-800 shadow-2xl': dispositivoVista === 'tablet',
-                                        'w-[375px] h-[667px] rounded-[2.5rem] border-8 border-slate-800 shadow-2xl': dispositivoVista === 'movil'
-                                    }" class="transition-all duration-300 bg-white overflow-hidden relative">
-                                        <iframe id="iframe-vista" class="w-full h-full border-0"></iframe>
-                                    </div>
-                                </template>
+                                <textarea readonly x-model="bundleAi" class="w-full h-full bg-slate-950 text-slate-300 p-4 text-xs resize-none focus:outline-none font-mono" placeholder="El código unificado aparecerá aquí..."></textarea>
                             </div>
                         </div>
 
@@ -293,7 +219,7 @@
                             <template x-if="!archivoSeleccionado">
                                 <div class="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-2">
                                     <i class="fa-solid fa-file-code text-4xl text-slate-700"></i>
-                                    <p class="text-sm text-slate-400">Selecciona un archivo del árbol de la izquierda para editar su contenido.</p>
+                                    <p class="text-sm text-slate-400">Selecciona un archivo del árbol de la izquierda para editarlo.</p>
                                 </div>
                             </template>
                             <template x-if="archivoSeleccionado">
@@ -307,42 +233,17 @@
                             </template>
                         </div>
 
-                        <!-- Pestaña 3: Código HTML Final -->
-                        <div x-show="pestanaActiva === 'codigoFinal'" class="flex-1 flex flex-col gap-3">
-                            <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-                                <span x-text="htmlEmpaquetado ? 'Tamaño final: ' + formatearBytes(htmlEmpaquetado.length) : 'Sin código generado'"></span>
-                                <span class="text-slate-500">Cero dependencias externas o rutas rotas</span>
-                            </div>
-                            <div class="flex-1 bg-slate-950 rounded-xl border border-slate-800 overflow-hidden relative">
-                                <template x-if="!htmlEmpaquetado">
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center space-y-2">
-                                        <i class="fa-solid fa-code text-4xl text-slate-700"></i>
-                                        <p class="text-sm text-slate-400">El código empaquetado final aparecerá aquí.</p>
-                                    </div>
-                                </template>
-                                <textarea readonly x-model="htmlEmpaquetado" class="w-full h-full bg-slate-950 text-slate-300 p-4 text-xs resize-none focus:outline-none font-mono" placeholder="Resultado HTML único..."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Pestaña 4: Registros de Diagnóstico -->
+                        <!-- Pestaña 3: Registros -->
                         <div x-show="pestanaActiva === 'registros'" class="flex-1 flex flex-col gap-3">
                             <div class="flex items-center justify-between text-xs text-slate-400 px-1">
-                                <span>Registro de Empaquetado y Resolución de Rutas</span>
-                                <button @click="registros = []" class="text-slate-500 hover:text-slate-300 cursor-pointer">Limpiar Registros</button>
+                                <span>Historial de Procesamiento</span>
+                                <button @click="registros = []" class="text-slate-500 hover:text-slate-300 cursor-pointer">Limpiar</button>
                             </div>
                             <div class="flex-1 bg-slate-950 rounded-xl border border-slate-800 p-4 overflow-y-auto space-y-2 font-mono text-xs">
-                                <template x-if="registros.length === 0">
-                                    <p class="text-slate-600 italic">No hay registros aún. Importa un proyecto y haz clic en empaquetar.</p>
-                                </template>
                                 <template x-for="reg in registros" :key="reg.id">
                                     <div class="flex items-start space-x-2 border-b border-slate-900 pb-1.5">
                                         <span class="text-slate-500 text-[10px]" x-text="reg.tiempo"></span>
-                                        <span :class="{
-                                            'text-emerald-400': reg.tipo === 'exito',
-                                            'text-amber-400': reg.tipo === 'aviso',
-                                            'text-rose-400': reg.tipo === 'error',
-                                            'text-indigo-400': reg.tipo === 'info'
-                                        }" class="font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-slate-900" x-text="reg.tipo"></span>
+                                        <span class="font-bold uppercase text-[10px] px-1.5 py-0.5 rounded bg-slate-900 text-indigo-400" x-text="reg.tipo"></span>
                                         <span class="text-slate-300 flex-1" x-text="reg.mensaje"></span>
                                     </div>
                                 </template>
@@ -355,7 +256,7 @@
             </div>
         </template>
 
-        <!-- STREAMING_CHUNK:Configurando el estado vacío inicial... -->
+        <!-- Estado Vacío Inicial -->
         <template x-if="obtenerCantidadArchivos() === 0">
             <div class="bg-dark-900/50 border border-slate-800/80 rounded-2xl p-12 text-center flex flex-col items-center justify-center space-y-4">
                 <div class="w-16 h-16 rounded-2xl bg-slate-800/80 flex items-center justify-center text-indigo-400 shadow-inner">
@@ -364,7 +265,7 @@
                 <div class="max-w-md space-y-1">
                     <h3 class="text-lg font-semibold text-white">Ningún proyecto cargado</h3>
                     <p class="text-sm text-slate-400">
-                        Sube una carpeta con subdirectorios, un archivo .zip o haz clic en <button @click="cargarProyectoDemo()" class="text-indigo-400 underline hover:text-indigo-300 cursor-pointer">Cargar Proyecto Demo</button> para probar al instante.
+                        Sube tu carpeta de código o haz clic en <button @click="cargarProyectoDemo()" class="text-indigo-400 underline hover:text-indigo-300 cursor-pointer">Cargar Demo</button> para probar.
                     </p>
                 </div>
             </div>
@@ -372,7 +273,7 @@
 
     </main>
 
-    <!-- Importación de Script JS externo -->
+    <!-- Script JS externo -->
     <script src="js/app.js"></script>
 </body>
 </html>
