@@ -4,6 +4,7 @@ function empaquetadorApp() {
         arbolArchivos: {},
         archivoSeleccionado: null,
         contenidoEditor: '',
+        filtroArbol: '',
         opciones: {
             excluirBinarios: true
         },
@@ -45,6 +46,23 @@ function empaquetadorApp() {
             return 'fa-solid fa-file text-slate-400';
         },
 
+        // Filtro para excluir carpetas y archivos basura del sistema (node_modules, .git, etc.)
+        esArchivoIgnorable(ruta) {
+            const patronesIgnorados = /(^|\/)(node_modules|\.git|\.next|dist|build|\.DS_Store|__MACOSX)(\/|$)/i;
+            return patronesIgnorados.test(ruta);
+        },
+
+        filtrarArbol() {
+            if (!this.filtroArbol) return this.arbolArchivos;
+            const filtrado = {};
+            for (const [ruta, nodo] of Object.entries(this.arbolArchivos)) {
+                if (ruta.toLowerCase().includes(this.filtroArbol.toLowerCase())) {
+                    filtrado[ruta] = nodo;
+                }
+            }
+            return filtrado;
+        },
+
         async manejarSeleccionCarpeta(evento) {
             const listaArchivos = evento.target.files;
             if (!listaArchivos || listaArchivos.length === 0) return;
@@ -63,12 +81,13 @@ function empaquetadorApp() {
 
                 for (const [rutaRelativa, entradaZip] of Object.entries(contenidoZip.files)) {
                     if (entradaZip.dir) continue;
-                    if (rutaRelativa.includes('__MACOSX') || rutaRelativa.startsWith('.')) continue;
+                    
+                    const rutaLimpia = rutaRelativa.startsWith('/') ? rutaRelativa.substring(1) : rutaRelativa;
+                    if (this.esArchivoIgnorable(rutaLimpia)) continue;
 
-                    const esBinario = /\.(png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|pdf|zip)$/i.test(rutaRelativa);
+                    const esBinario = /\.(png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|pdf|zip)$/i.test(rutaLimpia);
                     let contenido = esBinario ? '[Archivo Binario]' : await entradaZip.async('text');
 
-                    const rutaLimpia = rutaRelativa.startsWith('/') ? rutaRelativa.substring(1) : rutaRelativa;
                     tempArchivos[rutaLimpia] = {
                         contenido: contenido,
                         tamano: contenido.length,
@@ -139,7 +158,8 @@ function empaquetadorApp() {
                 const archivo = listaArchivos[i];
                 let ruta = archivo.webkitRelativePath || archivo.fullPath || archivo.name;
                 ruta = ruta.startsWith('/') ? ruta.substring(1) : ruta;
-                if (ruta.includes('__MACOSX') || ruta.startsWith('.')) continue;
+
+                if (this.esArchivoIgnorable(ruta)) continue;
 
                 const esBinario = /\.(png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot|pdf|zip)$/i.test(ruta);
                 let contenido = '';
